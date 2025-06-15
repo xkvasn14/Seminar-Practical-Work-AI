@@ -17,6 +17,12 @@ theoretical problem. Students are required to understand a current practical pro
 Intelligence or a related field and to independently work on solving it computationally or
 mathematically. Students are required to present their final results. Implemented source code,
 results, and a written report summarizing work and results must be handed in.
+---
+
+<p align="center">
+<img align="center" width="400" height="250" src="figs/gifs/pose_normal_squad.gif"/>
+<img align="center" width="400" height="250" src="figs/fig_data_12343658_1_012.png"/>
+</p>
 
 ---
 
@@ -103,7 +109,6 @@ OptiTrack and Motive Software:
 #### idea.max.content.load.filesize=25000
 
 #### idea.max.intellisense.filesize=25000
-
 
 ### RUN AS PIPELINE
 
