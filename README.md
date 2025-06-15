@@ -17,6 +17,7 @@ theoretical problem. Students are required to understand a current practical pro
 Intelligence or a related field and to independently work on solving it computationally or
 mathematically. Students are required to present their final results. Implemented source code,
 results, and a written report summarizing work and results must be handed in.
+
 ---
 
 <p align="center">
