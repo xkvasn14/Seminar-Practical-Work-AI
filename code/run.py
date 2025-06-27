@@ -28,8 +28,8 @@ if __name__ == "__main__":
     test_stgcn(normalized_data_path=f"data_in_use/data_12343658_1_022.csv", model_stgcn_path="best_stgcn.pth",
                save_csv=True)
 
-    labels = [0, 0, 0, 1, 0, 0, 0, 0, 0, 2, 2, 3, 4]
-    data_annotation_stgcn(path_to_datas="data_in_use", do_annotation=True, labels=labels)
-    train_cnn(dataset_path="data_in_use", model_path="best_cnn.pth", test=True, train=True)
+    # labels = [0, 0, 0, 1, 0, 0, 0, 0, 0, 2, 2, 3, 4]
+    # data_annotation_stgcn(path_to_datas="data_in_use", do_annotation=True, labels=labels)
+    # train_cnn(dataset_path="data_in_use", model_path="best_cnn.pth", test=True, train=True)
 
     make_graphs("data_in_use")

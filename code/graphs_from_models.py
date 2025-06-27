@@ -69,7 +69,7 @@ def make_graphs(dataset_path:str="data_in_use"):
 
     for path in paths:
         if path.endswith(".csv"):
-            if "_lstm" in path or "_dsvm" in path or "_stgcn" in path or "_cnn" in path:
+            if "_lstm" in path or "_dsvm" in path or "_stgcn" in path:
                 make_graph_from_model(dataset_path + "/" + path)
         else:
             continue
