@@ -168,7 +168,7 @@ def train_stgcn(dataset_path: str = "data_in_use/tmp_file.csv", model_path: str 
     scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=5, verbose=True)
 
     best_val_loss = float('inf')
-    epochs = 20
+    epochs = 30
     for epoch in range(epochs):
         model.train()
         train_loss, train_acc = train_one_epoch(model, train_loader, criterion, optimizer, device)
