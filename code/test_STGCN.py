@@ -48,6 +48,13 @@ def test_stgcn(normalized_data_path: str = "data_in_use/data_12343658_1_022.csv"
     # Load the CSV and parse features and label
     df = pd.read_csv(normalized_data_path)
     labels = df['Cluster'].values.astype(int)
+
+    dataset_path = "data_in_use/tmp_file.csv"
+    dataset_df = pd.read_csv(dataset_path)
+    dataset_labels = dataset_df["Cluster"].values.astype(int)
+    unique_labels = pd.unique(dataset_labels)
+    num_classes = len(unique_labels)
+
     features = df.drop(columns=['Cluster']).values.astype(float)  # shape: (6690, 45)
 
     # Reshape the features:
@@ -90,10 +97,10 @@ def test_stgcn(normalized_data_path: str = "data_in_use/data_12343658_1_022.csv"
     )
 
     # Create an adjacency matrix A (for example, an identity matrix; adjust as needed)
-    A = torch.eye(15, dtype=torch.float32)
+    A = torch.eye(features.shape[-1], dtype=torch.float32)
 
     # AGAIN the number of classes must equal number of k-mean classes
-    model = load_stgcn_model(model_stgcn_path, num_class=11, A=A, in_channels=3, dropout=0.3, kernel_size=9)
+    model = load_stgcn_model(model_stgcn_path, num_class=num_classes, A=A, in_channels=3, dropout=0.3, kernel_size=9)
     model = model.to(device)
 
     criterion = nn.CrossEntropyLoss()

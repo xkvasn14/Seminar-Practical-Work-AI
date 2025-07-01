@@ -106,6 +106,8 @@ def train_lstm(dataset_path: str = 'data_in_use/tmp_file.csv', model_path: str =
 
     df = pd.read_csv(dataset_path)
     labels = df['Cluster'].values.astype(int)
+    unique_labels = pd.unique(labels)
+    num_classes = len(unique_labels)
     features = df.drop(columns=['Cluster']).values.astype(float)
     input_dim = features.shape[1]  # shape (6690, 45)
     sequences = features.reshape(-1, 1, input_dim)  # shape (6690, 1, 45)
@@ -155,7 +157,10 @@ def train_lstm(dataset_path: str = 'data_in_use/tmp_file.csv', model_path: str =
     # Assume `LSTM` class is already imported
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print(f"Using device: {device}")
-    model = LSTM(input_dim=input_dim, hidden_dim=128, fc_dim=32, output_dim=11, dropout=0.3)
+
+
+
+    model = LSTM(input_dim=input_dim, hidden_dim=128, fc_dim=32, output_dim=num_classes, dropout=0.3)
     model = model.to(device)
 
     criterion = nn.CrossEntropyLoss()
@@ -165,7 +170,7 @@ def train_lstm(dataset_path: str = 'data_in_use/tmp_file.csv', model_path: str =
     )
 
     # Main training loop
-    num_epochs = 50
+    num_epochs = 20
     best_val_loss = float('inf')
     for epoch in range(1, num_epochs + 1):
         train_loss, train_acc = train_one_epoch(model, train_loader, criterion, optimizer, device)

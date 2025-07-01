@@ -12,9 +12,6 @@ from DSVM import DSVM
 
 
 def predict_with_dsvm_list(dsvm_list, X):
-    """
-    For each sample in X, collect one vote per DSVM and return the class with the most votes.
-    """
     n_samples = X.shape[0]
     votes = [[] for _ in range(n_samples)]
 

@@ -57,6 +57,13 @@ def test_lstm(normalized_data_path: str = "data_in_use/data_12343658_1_022.csv",
 
     df = pd.read_csv(normalized_data_path)
     labels = df['Cluster'].values.astype(int)
+
+    dataset_path = "data_in_use/tmp_file.csv"
+    dataset_df = pd.read_csv(dataset_path)
+    dataset_labels = dataset_df["Cluster"].values.astype(int)
+    unique_labels = pd.unique(dataset_labels)
+    num_classes = len(unique_labels)
+
     features = df.drop(columns=['Cluster']).values.astype(float)
     input_dim = features.shape[1]  # shape (6690, 45)
     sequences = features.reshape(-1, 1, input_dim)  # shape (6690, 1, 45)
@@ -72,7 +79,7 @@ def test_lstm(normalized_data_path: str = "data_in_use/data_12343658_1_022.csv",
         pin_memory=True
     )
 
-    model = load_model(model_lstm_path, input_dim=input_dim, hidden_dim=128, fc_dim=32, output_dim=11, dropout=0.3)
+    model = load_model(model_lstm_path, input_dim=input_dim, hidden_dim=128, fc_dim=32, output_dim=num_classes, dropout=0.3)
     model = model.to(device)
 
     criterion = nn.CrossEntropyLoss()

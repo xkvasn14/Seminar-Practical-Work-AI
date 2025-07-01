@@ -17,8 +17,9 @@ idea.max.content.load.filesize=25000
 idea.max.intellisense.filesize=25000
 """
 
-
 """Some global variables"""
+
+
 # vivid_colors = [
 #         "#e6194b",  # Red
 #         "#7097BB",  # Midnight Blue - step 2
@@ -47,8 +48,54 @@ idea.max.intellisense.filesize=25000
 #         "#5e4fa2"  # Lavender
 #     ]
 
-vivid_colors = sns.mpl_palette("viridis", 11)
+def get_vivid_colors():
+    dataset_path = "data_in_use/tmp_file.csv"
+    dataset_df = pd.read_csv(dataset_path)
+    dataset_labels = dataset_df["Cluster"].values.astype(int)
+    unique_labels = pd.unique(dataset_labels)
+    num_classes = len(unique_labels)
+    vivid_colors = sns.mpl_palette("viridis", num_classes)
+    return vivid_colors
+
+
 # vivid_colors = sns.mpl_palette("Paired", 11)
+
+
+def remove_unwanted_points(arr, skeleton_baselines):
+    """
+    Removes unwanted points from the array based on skeleton_baselines.
+
+    Parameters:
+        arr (np.ndarray): The data array with columns corresponding to points.
+        skeleton_baselines (list): A list of point labels for each column in `arr`.
+        points_to_remove (list): A list of point labels to remove.
+
+    Returns:
+        np.ndarray: The array with unwanted points removed.
+    """
+
+    points_to_remove = [
+        'Skeleton Baseline_41:LShoulder',
+        'Skeleton Baseline_41:LUArm',
+        'Skeleton Baseline_41:LFArm',
+        'Skeleton Baseline_41:LHand',
+        'Skeleton Baseline_41:RShoulder',
+        'Skeleton Baseline_41:RUArm',
+        'Skeleton Baseline_41:RFArm',
+        'Skeleton Baseline_41:RHand'
+    ]
+
+    # Find indices of columns to remove
+    list_to_remove = [
+        i for i, label in enumerate(skeleton_baselines)
+        if label in points_to_remove
+    ]
+
+    # Remove the columns
+    arr_filtered = np.delete(arr, list_to_remove, axis=1)
+    skeleton_baselines_filtered = [label for i, label in enumerate(skeleton_baselines) if i not in list_to_remove]
+
+    return arr_filtered, skeleton_baselines_filtered
 
 
 def data_parser(csv_file):
@@ -90,6 +137,9 @@ def data_parser(csv_file):
     # delete 0-Bone, 1-SkelyBaseline, 2-ID, 3-Position, 4-XYZ label
     arr = np.delete(arr, [0, 1, 2, 3], axis=0)
 
+    # REMOVE UNWANTED POINTS
+    arr, skeleton_baselines = remove_unwanted_points(arr, skeleton_baselines=skeleton_baselines)
+
     # save the data into csv
     with open(f"data_in_use/data_{os.path.basename(csv_file).split('.')[0]}.csv", mode='w', encoding="utf-8",
               newline='') as file:
@@ -113,6 +163,7 @@ def data_normalization(data_entry):
     csv_file, torso_position = data_entry
     # torso position needs to be multiplied by 3, because of the (x,y,z) format to get the torso position index
     # skip first row for XYZ labels
+
     data = np.loadtxt(csv_file, delimiter=',', dtype=float, skiprows=1)
     arr = []
     for row in data:
@@ -218,7 +269,7 @@ def kmeans(norm_csv_path, n_clusters=11, visualize=True, save_fig=True):
     data.to_csv(norm_csv_path, index=False)
     print(f"Annotated data saved to {norm_csv_path}")
 
-    cmap = ListedColormap(vivid_colors)
+    cmap = ListedColormap(get_vivid_colors())
 
     # Optional: Visualize the clusters in 3D
     if visualize:
@@ -236,19 +287,31 @@ def kmeans(norm_csv_path, n_clusters=11, visualize=True, save_fig=True):
         ax.set_xlabel("X (Normalized)")
         ax.set_ylabel("Y (Normalized)")
         ax.set_zlabel("Z (Normalized)")
-        plt.colorbar(scatter, label='Cluster Label',pad=0.15)
+        cbar = plt.colorbar(scatter, label='Cluster Label', pad=0.15)
+        cbar.ax.set_yticks([])
 
         if save_fig:
             name_file = norm_csv_path.split('.')[0].split('/')[1]
             makedirs("figures", exist_ok=True)
             plt.savefig(f"figures/fig_{name_file}")
+            plt.close()
         else:
             plt.show()
 
 
 def concatenate_files_with_condition(file_paths, output_path):
+    how_many_cols = 15
+    with open(file_paths[0], 'r') as readfile:
+        first_line = readfile.readline().strip()
+        how_many_cols = first_line.count("X")
+
+    outputfile_string = ""
+    for i in range(how_many_cols):
+        outputfile_string += "X,Y,Z,"
+    outputfile_string = outputfile_string.rstrip(",") + "\n"
+
     with open(output_path, 'w') as outfile:
-        outfile.write("X,Y,Z,X,Y,Z,X,Y,Z,X,Y,Z,X,Y,Z,X,Y,Z,X,Y,Z,X,Y,Z,X,Y,Z,X,Y,Z,X,Y,Z,X,Y,Z,X,Y,Z,X,Y,Z,X,Y,Z\n")
+        outfile.write(outputfile_string)
         for idx, file_path in enumerate(file_paths):
             with open(file_path, 'r') as f:
                 if any("Cluster" in line for line in f):
@@ -282,7 +345,7 @@ def separate_tmp_file_into_files(visualize: bool = True, save_fig: bool = True):
 
     print("Data successfully split into original files with headers included.")
 
-    cmap = ListedColormap(vivid_colors)
+    cmap = ListedColormap(get_vivid_colors())
     norm = plt.Normalize(vmin=0, vmax=10)
 
     # Optional: Visualize the clusters in 3D
@@ -303,20 +366,21 @@ def separate_tmp_file_into_files(visualize: bool = True, save_fig: bool = True):
             ax.set_xlabel("X (Normalized)")
             ax.set_ylabel("Y (Normalized)")
             ax.set_zlabel("Z (Normalized)")
-            plt.colorbar(scatter, label='Cluster Label',pad=0.15)
+            cbar = plt.colorbar(scatter, label='Cluster Label', pad=0.15)
+            cbar.ax.set_yticks([])
 
             if save_fig:
                 name_file = filename.split('.')[0].split('/')[1]
                 makedirs("figures", exist_ok=True)
                 plt.savefig(f"figures/fig_{name_file}")
                 print(f"Figure {name_file} saved into figures")
+                plt.close()
             else:
                 plt.show()
 
 
 def data_animation(arr):
     # Time range for the sequence
-    start_time, end_time = 0, arr.size
     start_time, end_time = 0, arr.size
 
     # Create the figure and 3D axes
@@ -362,7 +426,6 @@ def posture_analysis_pipeline(data_folder="../data", do_annotation=True, do_norm
                 if ".csv" in f:
                     try:
                         data_entry = data_parser(root + "/" + f)
-                        csv_file, torso = data_entry
                         data_normalization(data_entry)
                     except:
                         print("Something went wrong :)")

@@ -118,7 +118,8 @@ OptiTrack and Motive Software:
 - Scripts will create best_lstm.pth, best_stgcn.pth, best_cnn.pth, best_dsvm.pkl as best model checkpoints
 - prepare data in folder ../data
 - Install all dependencies
-- Execute run.py
+- Tested on Python 3.10
+- #### Execute run.py
 
 ### RUN AS SINGLE SCRIPT
 

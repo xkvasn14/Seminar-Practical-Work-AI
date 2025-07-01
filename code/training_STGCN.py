@@ -94,6 +94,9 @@ def train_stgcn(dataset_path: str = "data_in_use/tmp_file.csv", model_path: str 
     print(f"Using device: {device}")
 
     df = pd.read_csv(dataset_path)
+    skeleton_labels = df['Cluster'].values.astype(int)
+    unique_labels = pd.unique(skeleton_labels)
+    sum_of_unique_labels = sum(unique_labels)
     features = df.drop(columns=['Cluster']).values.astype(float)
 
     x_columns = [col for col in df.columns if col.startswith("X")]
@@ -106,7 +109,6 @@ def train_stgcn(dataset_path: str = "data_in_use/tmp_file.csv", model_path: str 
 
     reshaped_data = np.stack([data_x, data_y, data_z], axis=0)
     skeleton_data = reshaped_data
-    skeleton_labels = df['Cluster'].values.astype(int)
     skeleton_data = np.transpose(skeleton_data, (1, 0, 2))
 
     train_seqs, temp_seqs, train_labels, temp_labels = train_test_split(
@@ -152,7 +154,14 @@ def train_stgcn(dataset_path: str = "data_in_use/tmp_file.csv", model_path: str 
 
     input_channels = skeleton_data.shape[1]
     num_classes = len(set(skeleton_labels))
-    A = torch.ones((15, 15), dtype=torch.float32)
+
+    dataset_path = "data_in_use/tmp_file.csv"
+    dataset_df = pd.read_csv(dataset_path)
+    dataset_labels = dataset_df["Cluster"].values.astype(int)
+    unique_labels = pd.unique(dataset_labels)
+    num_classes = len(unique_labels)
+
+    A = torch.ones((skeleton_data.shape[-1], skeleton_data.shape[-1]), dtype=torch.float32)
     model = STGCN(in_channels=input_channels, num_class=num_classes, A=A).to(device)
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=0.0001)
