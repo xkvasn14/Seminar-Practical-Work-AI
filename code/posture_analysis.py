@@ -73,7 +73,7 @@ def remove_unwanted_points(arr, skeleton_baselines):
     Returns:
         np.ndarray: The array with unwanted points removed.
     """
-
+    # points to remove arms and hands
     points_to_remove = [
         'Skeleton Baseline_41:LShoulder',
         'Skeleton Baseline_41:LUArm',
@@ -86,6 +86,7 @@ def remove_unwanted_points(arr, skeleton_baselines):
     ]
 
     # Find indices of columns to remove
+    # remove arms and hands since we are doing just squats we will need legs and back
     list_to_remove = [
         i for i, label in enumerate(skeleton_baselines)
         if label in points_to_remove
@@ -253,7 +254,7 @@ def data_annotation(norm_csv_path="data_in_use", create_dataset=True):
         separate_tmp_file_into_files()
 
 
-def kmeans(norm_csv_path, n_clusters=11, visualize=True, save_fig=True):
+def kmeans(norm_csv_path, n_clusters=5, visualize=True, save_fig=True):
     # Load the normalized data
     data = pd.read_csv(norm_csv_path)
     # data = pd.read_csv("data_in_use/data_12343658_1_023.csv")
