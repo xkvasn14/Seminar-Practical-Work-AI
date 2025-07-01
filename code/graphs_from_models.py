@@ -139,10 +139,13 @@ def create_confusion_matrix(file_path, output_path="confusion_matrix.png", save_
     predictions = df['Prediction']
 
     all_classes = sorted(set(clusters.unique()).union(predictions.unique()))
+    labels = all_classes.copy()
+    if len(all_classes) == 5:
+        labels = ["Stand-Base", "Stand-Move2", "Stand-Move1", "Sit", "Squat"]
 
     # Generate confusion matrix
     cm = confusion_matrix(clusters, predictions, labels=all_classes)
-    cm_df = pd.DataFrame(cm, index=all_classes, columns=all_classes)
+    cm_df = pd.DataFrame(cm, index=labels, columns=labels)
 
     # Plot the confusion matrix
     plt.figure(figsize=(10, 7))
@@ -169,5 +172,5 @@ def make_confusion_matrices(dataset_path: str = "data_in_use"):
 
 
 if __name__ == "__main__":
-    make_graphs("data_in_use")
+    # make_graphs("data_in_use")
     make_confusion_matrices("data_in_use")
