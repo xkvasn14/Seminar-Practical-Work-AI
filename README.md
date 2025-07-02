@@ -57,6 +57,14 @@ OptiTrack and Motive Software:
 - K-means algorithm
 - Data annotation
 
+---
+
+<p align="center">
+<img align="center" width="800" height="200" src="figs/pipeline.jpg"/>
+</p>
+
+---
+
 ### Models Used
 
 - DSVM - Dual Support Vector Machines
