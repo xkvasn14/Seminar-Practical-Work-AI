@@ -60,7 +60,7 @@ OptiTrack and Motive Software:
 ---
 
 <p align="center">
-<img align="center" width="800" height="200" src="figs/pipeline.jpg"/>
+<img align="center" width="800" height="200" src="figs/pipeline.png"/>
 </p>
 
 ---
