@@ -1,3 +1,5 @@
+import os
+
 from CNN import train_cnn
 from graphs_from_models import make_graphs, make_confusion_matrices
 from data_annotation_stgcn import data_annotation_stgcn
@@ -57,23 +59,50 @@ def test_all():
     test_stgcn(normalized_data_path="data_in_use/data_12343658_1_024.csv", save_csv=True)
 
 
+def remove_directory_and_contents(dir_path):
+    if not os.path.exists(dir_path):
+        print(f"Directory '{dir_path}' does not exist.")
+        return
+    if not os.path.isdir(dir_path):
+        print(f"Path '{dir_path}' is not a directory.")
+        return
+    try:
+        for filename in os.listdir(dir_path):
+            file_path = os.path.join(dir_path, filename)
+            if os.path.isfile(file_path) or os.path.islink(file_path):
+                os.remove(file_path)
+            elif os.path.isdir(file_path):
+                remove_directory_and_contents(file_path)
+        os.rmdir(dir_path)
+        print(f"Directory '{dir_path}' and all its contents have been removed.")
+    except Exception as e:
+        print(f"Error removing directory '{dir_path}': {e}")
+
+
 if __name__ == "__main__":
+    remove_directory_and_contents("data_in_use")
+
     posture_analysis_pipeline("../data", do_normalization=True, do_annotation=True)
 
     train_dsvm(dataset_path='data_in_use/tmp_file.csv', model_path="best_dsvm.pkl")
     test_dsvm(normalized_data_path="data_in_use/data_12343658_1_012.csv", save_csv=True)
     test_dsvm(normalized_data_path="data_in_use/data_12343658_1_022.csv", save_csv=True)
+    test_dsvm(normalized_data_path="data_in_use/data_12343658_1_023.csv", save_csv=True)
 
     train_lstm(dataset_path='data_in_use/tmp_file.csv', model_path='best_lstm.pth')
     test_lstm(normalized_data_path="data_in_use/data_12343658_1_012.csv", model_lstm_path="best_lstm.pth",
               save_csv=True)
     test_lstm(normalized_data_path="data_in_use/data_12343658_1_022.csv", model_lstm_path="best_lstm.pth",
               save_csv=True)
+    test_lstm(normalized_data_path="data_in_use/data_12343658_1_023.csv", model_lstm_path="best_lstm.pth",
+              save_csv=True)
 
     train_stgcn(dataset_path="data_in_use/tmp_file.csv", model_path="best_stgcn.pth")
     test_stgcn(normalized_data_path=f"data_in_use/data_12343658_1_012.csv", model_stgcn_path="best_stgcn.pth",
                save_csv=True)
     test_stgcn(normalized_data_path=f"data_in_use/data_12343658_1_022.csv", model_stgcn_path="best_stgcn.pth",
+               save_csv=True)
+    test_stgcn(normalized_data_path=f"data_in_use/data_12343658_1_023.csv", model_stgcn_path="best_stgcn.pth",
                save_csv=True)
 
     # # # if you also wish to train and test CNN architecture

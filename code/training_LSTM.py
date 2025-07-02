@@ -170,7 +170,7 @@ def train_lstm(dataset_path: str = 'data_in_use/tmp_file.csv', model_path: str =
     )
 
     # Main training loop
-    num_epochs = 30
+    num_epochs = 50
     best_val_loss = float('inf')
     for epoch in range(1, num_epochs + 1):
         train_loss, train_acc = train_one_epoch(model, train_loader, criterion, optimizer, device)
