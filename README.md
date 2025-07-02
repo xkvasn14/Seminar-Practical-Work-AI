@@ -52,6 +52,7 @@ OptiTrack and Motive Software:
 ### Data Processing
 
 - Data Parsing
+- Removing Points
 - Setting main coordinate
 - Normalization
 - K-means algorithm
