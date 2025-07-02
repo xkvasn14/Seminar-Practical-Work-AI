@@ -1,17 +1,22 @@
-3 clusters - short training - very high accuracy - but useless
-data_12343658_1_012.csv: [0, 2, 1, 2, 0]
-data_12343658_1_013.csv: [0, 2, 1, 2, 0]
-data_12343658_1_014.csv: [0, 2, 1, 2, 0]
-data_12343658_1_015.csv: [0, 2, 1, 2, 0]
-data_12343658_1_016.csv: [0, 2, 1, 2, 0]
-data_12343658_1_017.csv: [0, 2, 1, 2, 0]
-data_12343658_1_018.csv: [0, 2, 1, 2, 0]
-data_12343658_1_019.csv: [0, 2, 1, 2, 0]
-data_12343658_1_020.csv: [0, 2, 1, 2, 0]
-data_12343658_1_021.csv: [0, 2, 1, 2, 0]
-data_12343658_1_022.csv: [0, 2, 1, 2, 0]
-data_12343658_1_023.csv: [0, 2]
-data_12343658_1_024.csv: [0, 2, 1, 2, 0]
+K-MEANS with different number of clusters
+
+n_clusters - training_time - expected_model_accuracy - class_prediction_ability
+name_of_datafile    :   [class prediction sequence]   - activity
+
+3 clusters - short training - very high accuracy - but useless, can not distinguish STAND,SQUAT,SIT
+data_12343658_1_012.csv: [0, 2, 1, 2, 0]    - squatting activity
+data_12343658_1_013.csv: [0, 2, 1, 2, 0]    - squatting activity
+data_12343658_1_014.csv: [0, 2, 1, 2, 0]    - squatting activity
+data_12343658_1_015.csv: [0, 2, 1, 2, 0]    - picking up activity
+data_12343658_1_016.csv: [0, 2, 1, 2, 0]    - squatting with hands up
+data_12343658_1_017.csv: [0, 2, 1, 2, 0]    - squatting with hands up
+data_12343658_1_018.csv: [0, 2, 1, 2, 0]    - squatting in t-pose
+data_12343658_1_019.csv: [0, 2, 1, 2, 0]    - squatting in t-pose
+data_12343658_1_020.csv: [0, 2, 1, 2, 0]    - squatting hands on head
+data_12343658_1_021.csv: [0, 2, 1, 2, 0]    - pistil squat R
+data_12343658_1_022.csv: [0, 2, 1, 2, 0]    - pistol squat L
+data_12343658_1_023.csv: [0, 2]             - sitting activity
+data_12343658_1_024.csv: [0, 2, 1, 2, 0]    - putting down activity
 
 5 clusters - short training - high accuracy - CAN DISTINGUISH STAND, SQUAT, SIT
 data_12343658_1_012.csv: [0, 2, 1, 4, 1, 2, 0]
